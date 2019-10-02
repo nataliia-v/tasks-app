@@ -1,3 +1,5 @@
+import axios, { post } from 'axios';
+
 class TasksService {
 
   _apiBase = 'https://uxcandy.com/~shapoval/test-task-backend/v2';
@@ -10,20 +12,44 @@ class TasksService {
     return await res.json();
   }
 
-  async taskResource(url, body, method) {
-    const res = await fetch(`${ this._apiBase }${ url }`, {
-      method: method,
-      headers: {
-        // 'Content-Type': 'multipart/form-data'
-        mimeType: "multipart/form-data",
-        contentType: false,
-        processData: false,
-      },
-      body
-    });
-    if (!res.ok) {
-      throw new Error(`Could not fetch ${ url }, received ${ res.status }`)
-    }
+  // async taskResource(url, body, method) {
+  //   const res = await fetch(`${ this._apiBase }${ url }`, {
+  //     method: method,
+  //     mimeType: "multipart/form-data",
+  //
+  //     headers: {
+  //       'Accept': 'application/json',
+  //       'Content-Type': 'false',
+  //       // contentType: false
+  //       // processData: false,
+  //     },
+  //     data: body
+  //   });
+  //   if (!res.ok) {
+  //     throw new Error(`Could not fetch ${ url }, received ${ res.status }`)
+  //   }
+  //   // return await res.json()
+  //   console.log(res.json())
+  // }
+
+  async taskResource(url, username, email, text) {
+    const formData = new FormData();
+
+    formData.set('email', `${email}`);
+    formData.set('text', `${text}`);
+    formData.set('username', `${username}`);
+
+
+    const config = { headers: { 'content-type': `multipart/form-data` } };
+
+    const res = axios.post(`${ this._apiBase }${ url }`, formData, config)
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
     return await res.json()
   }
 
@@ -32,10 +58,11 @@ class TasksService {
   }
 
   async createTask(username, email, text) {
-    const bodyItem = JSON.stringify({"username": `${ username }`, "email": `${ email }`, "text": `${ text }`});
-    const method = 'POST';
-    return await this.taskResource('/create?developer=Natashka', bodyItem, method);
+    return await this.taskResource('/create?developer=Natashka', username, email, text);
   }
+
+
+
 
 }
 
