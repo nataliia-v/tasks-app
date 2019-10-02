@@ -7,10 +7,10 @@ export default mapRoutes({
     component: TasksLists,
     path: "/tasks",
     exact: true
-  },
-  adminPage: {
-    component: AdminPage,
-    path: "/tasks/:admin",
-    exact: true
   }
+  // adminPage: {
+  //   component: AdminPage,
+  //   path: "/tasks/:admin",
+  //   exact: true
+  // }
 });

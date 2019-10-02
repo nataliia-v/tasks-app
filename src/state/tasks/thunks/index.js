@@ -9,10 +9,9 @@ export const fetchTasks = () => {
 
     try {
       const data = await tasksService.getAllTasks();
-
+      console.log(data);
       dispatch(actions.fetchTasksSuccess(data));
     } catch (error) {
-      console.log(error);
       dispatch(actions.fetchTasksFailed(error));
     } finally {
       dispatch(actions.stopTasksFetching());
