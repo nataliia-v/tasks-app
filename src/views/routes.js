@@ -1,11 +1,17 @@
 import TasksLists from '../views/TasksList';
 
 import { mapRoutes } from "../utils/helpers";
+import AddTask from "../components/AddTask/AddTask";
 
 export default mapRoutes({
   tasksList: {
     component: TasksLists,
-    path: "/tasks",
+    path: "/",
+    exact: true
+  },
+  createTask: {
+    component: AddTask,
+    path: "/create",
     exact: true
   }
   // adminPage: {

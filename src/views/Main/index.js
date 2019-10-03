@@ -8,7 +8,7 @@ function Main() {
       <div>
         <Switch>
           { routes }
-          <Redirect from="" to="/tasks"/>
+          <Redirect from="" to="/"/>
         </Switch>
       </div>
   );

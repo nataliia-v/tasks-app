@@ -1,10 +1,9 @@
 const initialState = {
-  data: [],
-  loading: true,
+  data: {},
+  loading: false,
   isSaving: false,
   error: null,
 };
-
 
 const reducer = (state = initialState, action) => {
 

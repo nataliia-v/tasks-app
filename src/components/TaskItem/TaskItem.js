@@ -87,6 +87,9 @@ function TaskItem(props) {
                         <Typography variant="body2" color="textSecondary" component="p">
                           { task.text }
                         </Typography>
+                        <Typography variant="body2" color="textSecondary" component="p">
+                          { task.status }
+                        </Typography>
                       </div>
 
                     {/*</Link>*/}

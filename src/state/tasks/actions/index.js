@@ -30,15 +30,15 @@ export const startTaskSaving = () => ({
 export const stopTaskSaving = () => ({
   type: "STOP_TASK_SAVING"
 });
-export const saveTaskSuccess = post => ({
+export const saveTaskSuccess = task => ({
   type: "SAVE_TASK_SUCCESS",
-  payload: post
+  payload: task
 });
 export const saveTaskFailed = error => ({
   type: "SAVE_TASK_FAILED",
   payload: error
 });
-export const updateTaskSuccess = post => ({
+export const updateTaskSuccess = task => ({
   type: 'UPDATE_TASK_SUCCESS',
-  payload: post,
+  payload: task,
 });

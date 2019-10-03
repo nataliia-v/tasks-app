@@ -2,26 +2,35 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { saveTask } from '../../state/tasks/thunks';
 import { getIsSavingTask } from "../../state/tasks/selectors";
+import { withRouter } from "react-router";
+import { FormErrors } from "../FormErrors/FormErrors";
 
 import styles from './addTask.module.scss'
 import TextField from '@material-ui/core/TextField';
-import Button from "@material-ui/core/Button";
-import Modal from '@material-ui/core/Modal';
+import { FormGroup } from "@material-ui/core";
 
 class AddTask extends Component {
 
   state = {
-    username: "UserName",
-    email: "ttttt@email.com",
-    text: "Text text text",
+    username: "",
+    email: "",
+    text: "",
+
+    formErrors: {username: "", email: "", text: ""},
+    usernameValid: false,
+    emailValid: false,
+    textValid: false,
+    formValid: false,
+
     showPostCreation: false,
-    isOpen: false,
   };
 
   onChangeUsername = e => {
+
     this.setState({
       username: e.target.value
     });
+
   };
 
   onChangeEmail = e => {
@@ -59,32 +68,11 @@ class AddTask extends Component {
 
   render() {
 
-    const {isOpen} = this.state;
-
-    const handleOpen = () => {
-      this.setState({
-        isOpen: true
-      });
-    };
-
-    const handleClose = () => {
-      this.setState({
-        isOpen: false
-      });
-    };
-
     return (
         <div>
           <div className={styles.btnAddPost}>
-            <Button  onClick={ handleOpen } variant="outlined">
-              Add a task
-            </Button>
-            <Modal className={ styles.modal }
-                   aria-labelledby="simple-modal-title"
-                   aria-describedby="simple-modal-description"
-                   open={ isOpen }
-                   onClose={ handleClose }
-            >
+
+            <FormGroup className={ styles.modal }>
               <div>
                 <form className={ styles.formAddPost } noValidate autoComplete="off" onSubmit={ this.handleSubmit }>
 
@@ -95,6 +83,7 @@ class AddTask extends Component {
                       onChange={ this.onChangeUsername }
                       margin="normal"
                       variant="outlined"
+                      value={this.state.username}
                   />
                   <TextField
                       id="standard-textarea"
@@ -104,6 +93,7 @@ class AddTask extends Component {
                       multiline
                       onChange={ this.onChangeEmail }
                       margin="normal"
+                      value={this.state.email}
                   />
                   <TextField
                       id="standard-textarea"
@@ -112,12 +102,17 @@ class AddTask extends Component {
                       multiline
                       onChange={ this.onChangeBody }
                       margin="normal"
+                      value={this.state.text}
                   />
                   <button onClick={ this.handleSubmit } className={ styles.btn }>add a task</button>
                 </form>
               </div>
-            </Modal>
+            </FormGroup>
+
           </div>
+
+          <FormErrors formErrors={this.state.formErrors} />
+
         </div>
     );
   }
@@ -127,4 +122,4 @@ const mapStateToProps = state => ({
   isSaving: getIsSavingTask(state)
 });
 
-export default connect(mapStateToProps)(AddTask);
+export default withRouter(connect(mapStateToProps)(AddTask));
