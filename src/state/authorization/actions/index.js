@@ -9,9 +9,9 @@ export const stopUserLoginFetching = () => ({
   type: 'STOP_USER_LOGIN_FETCHING',
 });
 
-export const fetchUserLoginSuccess = newTasks => ({
+export const fetchUserLoginSuccess = userObj => ({
   type: 'FETCH_USER_LOGIN_SUCCESS',
-  payload: newTasks
+  payload: userObj
 });
 
 export const fetchUserLoginFailed = error => ({

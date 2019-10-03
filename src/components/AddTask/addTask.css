@@ -1,0 +1,62 @@
+.btnAddPost {
+  margin-bottom: 20px;
+}
+/*.modal {*/
+
+/*  background-color: rgba(0, 120, 201, 0.9);*/
+/*  padding: 10vh 35vw 50vh;*/
+
+/*  .formAddPost {*/
+/*    max-width: 500px;*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    background-color: white;*/
+/*    padding: 10px;*/
+
+/*    .btn {*/
+/*      font-size: 0.875rem;*/
+/*      padding: 5px 16px;*/
+/*      border-radius: 4px;*/
+/*      text-transform: uppercase;*/
+/*      width: 200px;*/
+/*      margin: auto;*/
+/*    }*/
+/*  }*/
+
+/*}*/
+
+.modal {
+
+  background-color: rgba(0, 120, 201, 0.9);
+  padding: 10vh 35vw 50vh;}
+
+.formAddPost {
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding: 10px;}
+
+.btn {
+  font-size: 0.875rem;
+  padding: 5px 16px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  width: 200px;
+  margin: auto;
+}
+
+.red {
+  color: red;
+  /*background-color: red;*/
+}
+
+.blue {
+  color: blue;
+  /*background-color: #3498db;*/
+
+}
+
+.aaa {
+  background-color: white;
+}

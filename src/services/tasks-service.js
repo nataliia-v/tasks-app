@@ -12,12 +12,7 @@ class TasksService {
     return await res.json();
   }
 
-  async taskResource(url, username, email, text) {
-    const formData = new FormData();
-
-    formData.set('email', `${email}`);
-    formData.set('text', `${text}`);
-    formData.set('username', `${username}`);
+  async taskResource(url, formData) {
 
     const config = { headers: { 'content-type': `multipart/form-data` } };
 
@@ -25,23 +20,61 @@ class TasksService {
         .then(function (response) {
           console.log(response);
         })
+
         .catch(function (error) {
           console.log(error);
         });
+
 
     return await res.json()
   }
 
   async getAllTasks(perPage) {
     return await this.getResource(`?developer=Natashka&page=${ perPage }`);
-    // https://uxcandy.com/~shapoval/test-task-backend/v2/?developer=Natashka&page=3
   }
 
   async createTask(username, email, text) {
-    return await this.taskResource('create?developer=Natashka', username, email, text);
+
+    const formData = new FormData();
+
+    formData.set('email', `${email}`);
+    formData.set('text', `${text}`);
+    formData.set('username', `${username}`);
+
+    return await this.taskResource('create?developer=Natashka', formData);
   }
 
+  // auth
 
+
+  async userResource(url, formData) {
+
+    const config = { headers: { 'content-type': `multipart/form-data` } };
+
+    const res = axios.post(`${ this._apiBase }${ url }`, formData, config)
+        .then(function (response) {
+
+          localStorage.setItem("token", response.data.message.token);
+        })
+
+        .catch(function (error) {
+          console.log(error);
+        });
+
+
+    return await res.json()
+  }
+
+  async userAuth({username, password}) {
+    console.log(username);
+
+    const formData = new FormData();
+
+    formData.set('username', `${username}`);
+    formData.set('password', `${password}`);
+
+    return await this.userResource('login?developer=Natashka', formData)
+  }
 
 
 }

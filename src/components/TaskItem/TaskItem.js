@@ -85,7 +85,7 @@ function TaskItem(props) {
                           { task.email }
                         </Typography>
                         <Typography variant="body2" color="textSecondary" component="p">
-                          { task.text }
+                          {  decodeURIComponent(task.text) }
                         </Typography>
                         <Typography variant="body2" color="textSecondary" component="p">
                           { task.status }

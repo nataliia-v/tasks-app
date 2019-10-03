@@ -31,13 +31,11 @@ const useStyles = makeStyles(() => ({
 
 }));
 
-const TasksList = ({tasks, totalTaskCount}) => {
+const TasksList = ({tasks}) => {
   const classes = useStyles();
 
   return (
       <div>
-
-
         <ul>
 
           {
@@ -84,19 +82,21 @@ function TasksListContainer({tasks, totalTasksCount, loading, error, dispatch, p
           </Button>
         </Link>
 
-        <ReactPaginate
-            previousLabel={ <button>previous</button> }
-            nextLabel={ <button>next</button> }
-            breakLabel={ '...' }
-            breakClassName={ 'break-me' }
-            pageCount={ pageCount }
-            marginPagesDisplayed={ 2 }
-            pageRangeDisplayed={ 3 }
-            onPageChange={ handlePageClick }
-            containerClassName={ 'pagination' }
-            subContainerClassName={ 'pages pagination' }
-            activeClassName={ styles.selectedPage }
-        />
+          <ReactPaginate
+              previousLabel={ <button>previous</button> }
+              nextLabel={ <button>next</button> }
+              breakLabel={ '...' }
+              breakClassName={ 'break-me' }
+              pageCount={ pageCount }
+              marginPagesDisplayed={ 2 }
+              pageRangeDisplayed={ 3 }
+              onPageChange={ handlePageClick }
+              containerClassName={ 'pagination' }
+              subContainerClassName={ 'pages pagination' }
+              activeClassName={ styles.selectedPage }
+          />
+
+
         { loading
             ? <Spinner/>
             : <TasksList

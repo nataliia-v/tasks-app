@@ -2,6 +2,7 @@ import TasksLists from '../views/TasksList';
 
 import { mapRoutes } from "../utils/helpers";
 import AddTask from "../components/AddTask/AddTask";
+import Login from "../components/Auth/Auth";
 
 export default mapRoutes({
   tasksList: {
@@ -13,10 +14,11 @@ export default mapRoutes({
     component: AddTask,
     path: "/create",
     exact: true
+  },
+  authPage: {
+    component: Login,
+    path: "/login",
+    exact: true
   }
-  // adminPage: {
-  //   component: AdminPage,
-  //   path: "/tasks/:admin",
-  //   exact: true
-  // }
+
 });
