@@ -35,3 +35,22 @@ export const saveTask = ({ username, email, text }) => {
     }
   };
 };
+
+export const updateTaskThunk = ({id, text}) => {
+
+  return async dispatch => {
+    dispatch(actions.startTaskSaving());
+
+    try {
+      const data = await tasksService.updateTask(id, text);
+      console.log('updated task', data);
+
+      dispatch(actions.updateTaskSuccess(data));
+    } catch (error) {
+      dispatch(actions.saveTaskFailed(error));
+    } finally {
+      dispatch(actions.stopTaskSaving());
+    }
+  }
+
+};

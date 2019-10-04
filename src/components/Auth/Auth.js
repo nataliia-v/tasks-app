@@ -21,7 +21,7 @@ class Login extends Component {
         // .then(function (response) {
         //   // console.log(response.data.message.token);
         // });
-    console.log(localStorage)
+    // console.log(localStorage)
   };
 
   render() {

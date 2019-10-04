@@ -14,7 +14,7 @@ class TasksService {
 
   async taskResource(url, formData) {
 
-    const config = { headers: { 'content-type': `multipart/form-data` } };
+    const config = {headers: {'content-type': `multipart/form-data`}};
 
     const res = axios.post(`${ this._apiBase }${ url }`, formData, config)
         .then(function (response) {
@@ -24,7 +24,6 @@ class TasksService {
         .catch(function (error) {
           console.log(error);
         });
-
 
     return await res.json()
   }
@@ -37,32 +36,49 @@ class TasksService {
 
     const formData = new FormData();
 
-    formData.set('email', `${email}`);
-    formData.set('text', `${text}`);
-    formData.set('username', `${username}`);
+    formData.set('email', `${ email }`);
+    formData.set('text', `${ text }`);
+    formData.set('username', `${ username }`);
 
     return await this.taskResource('create?developer=Natashka', formData);
+  }
+
+
+  async updateTask(id, text) {
+
+    const formData = new FormData();
+    const token = localStorage.token;
+
+    formData.set('text', `${ text }`);
+    formData.set('token', `${ token }`);
+    console.log(formData);
+
+    return await this.taskResource(`edit/${ id }?developer=Natashka`, formData);
   }
 
   // auth
 
 
   async userResource(url, formData) {
+    const config = {headers: {'content-type': `multipart/form-data`}};
 
-    const config = { headers: { 'content-type': `multipart/form-data` } };
+    try {
+      const res = await axios.post(`${ this._apiBase }${ url }`, formData, config);
 
-    const res = axios.post(`${ this._apiBase }${ url }`, formData, config)
-        .then(function (response) {
+      localStorage.setItem("token", res.data.message.token);
+      console.log(res);
+      console.log(localStorage);
+      // const token = localStorage.token;
+      //
+      // if (token !== "undefined") {
+      //   console.log("token here")
+      // } else {
+      //   console.log("not token")
+      // }
 
-          localStorage.setItem("token", response.data.message.token);
-        })
-
-        .catch(function (error) {
-          console.log(error);
-        });
-
-
-    return await res.json()
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async userAuth({username, password}) {
@@ -70,8 +86,8 @@ class TasksService {
 
     const formData = new FormData();
 
-    formData.set('username', `${username}`);
-    formData.set('password', `${password}`);
+    formData.set('username', `${ username }`);
+    formData.set('password', `${ password }`);
 
     return await this.userResource('login?developer=Natashka', formData)
   }

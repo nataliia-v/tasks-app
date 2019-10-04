@@ -14,7 +14,7 @@ import ReactPaginate from 'react-paginate';
 
 import Spinner from "../Spinner/Spinner";
 import ErrorIndicator from "../ErrorIndicator/ErrorIndicator";
-import { fetchTasks } from "../../state/tasks/thunks";
+import { fetchTasks, updateTaskThunk } from "../../state/tasks/thunks";
 import { makeStyles } from '@material-ui/core/styles';
 import Card from "@material-ui/core/Card";
 import Button from "@material-ui/core/Button";
@@ -31,7 +31,7 @@ const useStyles = makeStyles(() => ({
 
 }));
 
-const TasksList = ({tasks}) => {
+const TasksList = ({tasks, onUpdate}) => {
   const classes = useStyles();
 
   return (
@@ -42,8 +42,8 @@ const TasksList = ({tasks}) => {
             tasks.map((task) => {
               return (
                   <Card className={ classes.card } key={ task.id }>
-                    <TaskItem task={ task }/>
-                    {/*onDelete={onDelete} onUpdate={onUpdate}*/ }
+                    <TaskItem task={ task } onUpdate={onUpdate} />
+
                   </Card>
               )
             })
@@ -60,6 +60,10 @@ function TasksListContainer({tasks, totalTasksCount, loading, error, dispatch, p
   const [currentPage, setCurrentPage] = useState(1);
 
   const handlePageClick = data => setCurrentPage(data.selected + 1);
+
+  const updateTask = data => {
+    dispatch(updateTaskThunk(data));
+  };
 
   useEffect(() => {
     dispatch(fetchTasks(currentPage));
@@ -103,6 +107,7 @@ function TasksListContainer({tasks, totalTasksCount, loading, error, dispatch, p
                 tasks={ tasks }
                 currentPage={ currentPage }
                 onPageClick={ handlePageClick }
+                onUpdate={updateTask}
             /> }
       </>
 

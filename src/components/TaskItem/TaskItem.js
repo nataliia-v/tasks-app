@@ -3,16 +3,16 @@ import { connect } from 'react-redux';
 // import { Link } from "react-router-dom";
 import { getIsSavingTask } from "../../state/tasks/selectors";
 
-// import styles from './TaskItem.module.scss';
+import styles from './TaskItem.module.scss';
 // import { makeStyles } from '@material-ui/core/styles';
-// import IconButton from '@material-ui/core/IconButton';
-// import DeleteIcon from '@material-ui/icons/Delete';
-// import EditIcon from '@material-ui/icons/Edit';
-// import Button from '@material-ui/core/Button';
-import CardActionArea from '@material-ui/core/CardActionArea';
-// import CardActions from '@material-ui/core/CardActions';
+import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
+import Button from '@material-ui/core/Button';
+import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
+import CardActionArea from "@material-ui/core/CardActionArea";
+
 
 // const useStyles = makeStyles(theme => ({
 //   button: {
@@ -22,43 +22,26 @@ import Typography from '@material-ui/core/Typography';
 // }));
 
 function TaskItem(props) {
-  const {task} = props;
-  // const postUrl = `/tasks }`;
+  const {task, onUpdate} = props;
 
-  // const [isEditMode, setIsEditMode] = useState(false);
-  // const [isViewComments, setIsViewComments] = useState(false);
-  // const [postTitle, setPostTitle] = useState(task.title);
-  // const [postBody, setPostBody] = useState(task.body);
-  // const [commentBody, setCommentBody] = useState("");
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [taskText, setTaskText] = useState(task.text);
 
-  // const onChangeTitle = e => {
-  //   const value = e.target.value;
-  //   setPostTitle(value);
-  // };
+  const onChangeText = e => {
+    const value = e.target.value;
+    setTaskText(value);
+  };
 
-  // const onChangeBody = e => {
-  //   const value = e.target.value;
-  //   setPostBody(value);
-  // };
-  //
-  // const onDeletePost = () => {
-  //   onDelete(post.id)
-  // };
-  //
-  // const onViewComments = () => {
-  //   setIsViewComments(prevIsViewComments => !prevIsViewComments)
-  // };
-  //
-  // const onEditPost = () => {
-  //   setIsEditMode(true);
-  // };
-  //
-  // const onUpdatePost = () => {
-  //   setIsEditMode(false);
-  //   const data = {id: post.id, title: postTitle, body: postBody};
-  //
-  //   onUpdate(data);
-  // };
+  const onEditTask = () => {
+    setIsEditMode(true);
+  };
+
+  const onUpdateTask = () => {
+    setIsEditMode(false);
+    const data = {id: task.id,  text: taskText};
+
+    onUpdate(data);
+  };
   // const onChangeBodyComment = (e) => {
   //   const value = e.target.value;
   //   setCommentBody(value);
@@ -71,12 +54,19 @@ function TaskItem(props) {
   // };
 
   // const classes = useStyles();
+
+  const token = localStorage.token;
+
+  // if (token !== "undefined") {
+  //   console.log("token here")
+  // } else {
+  //   console.log("not token")
+  // }
   return (
       <div>
         <CardActionArea>
           <CardContent>
 
-                    {/*<Link className={ styles.link } to={ postUrl }>*/}
                       <div>
                         <Typography gutterBottom variant="h5" component="h2">
                           { task.username }
@@ -84,53 +74,47 @@ function TaskItem(props) {
                         <Typography variant="body2" color="textSecondary" component="p">
                           { task.email }
                         </Typography>
-                        <Typography variant="body2" color="textSecondary" component="p">
-                          {  decodeURIComponent(task.text) }
-                        </Typography>
+
+                        { isEditMode
+                            ?
+                            (
+                                <p>
+                                  <textarea className={ styles.bodyItem } value={ taskText } onChange={ onChangeText }/>
+                                </p>
+                            )
+                            : (
+                                <Typography variant="body2" color="textSecondary" component="p" value={ taskText } onChange={ onChangeText}>
+                                  {  decodeURIComponent(task.text) }
+                                </Typography>
+                            )
+                        }
+
                         <Typography variant="body2" color="textSecondary" component="p">
                           { task.status }
                         </Typography>
                       </div>
 
-                    {/*</Link>*/}
 
           </CardContent>
         </CardActionArea>
-        {/*<CardActions className={ styles.flexBts }>*/}
-        {/*  <div>*/}
-        {/*    { isEditMode && <Button onClick={ onUpdatePost } variant="outlined">*/}
-        {/*      save post*/}
-        {/*    </Button> }*/}
-        {/*    <Button onClick={ onViewComments } variant="outlined">*/}
-        {/*      View comments*/}
-        {/*    </Button>*/}
-        {/*    <IconButton onClick={ onDeletePost } className={ classes.button } aria-label="delete">*/}
-        {/*      <DeleteIcon/>*/}
-        {/*    </IconButton>*/}
-        {/*    <IconButton onClick={ onEditPost } className={ classes.button } aria-label="delete">*/}
-        {/*      <EditIcon/>*/}
-        {/*    </IconButton>*/}
-        {/*  </div>*/}
-        {/*  <div>*/}
-        {/*    { isViewComments &&*/}
-        {/*    <div>*/}
-        {/*      <form className={ styles.form } onSubmit={ createComment }>*/}
-        {/*        <input className={ styles.inputFormComment } onChange={ onChangeBodyComment } type="text"/>*/}
-        {/*        <button className={ styles.btn }>add a comment</button>*/}
-        {/*      </form>*/}
-        {/*      <ul className={ styles.commentsList }>*/}
-        {/*        {*/}
-        {/*          post.comments && post.comments.map((comment) => {*/}
-        {/*            return (*/}
-        {/*                <li key={ comment.id }><Comment comment={ comment }/></li>*/}
-        {/*            )*/}
-        {/*          })*/}
-        {/*        }*/}
-        {/*      </ul>*/}
-        {/*    </div>*/}
-        {/*    }*/}
-        {/*  </div>*/}
-        {/*</CardActions>*/}
+        {/*{ token !== "undefined" &*/}
+
+        <CardActions className={ styles.flexBts }>
+          <div>
+        { isEditMode && <Button onClick={ onUpdateTask } variant="outlined">
+          save task
+          </Button> }
+
+          <IconButton onClick={ onEditTask }  aria-label="delete">
+          <EditIcon/>
+          </IconButton>
+          </div>
+
+          </CardActions>
+
+        {/*}*/}
+
+
       </div>
   );
 }

@@ -9,6 +9,7 @@ function Main() {
         <Switch>
           { routes }
           <Redirect from="" to="/"/>
+          <Redirect from="/login" to="/"/>
         </Switch>
       </div>
   );
