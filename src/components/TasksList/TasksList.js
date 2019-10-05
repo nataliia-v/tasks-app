@@ -3,7 +3,6 @@ import TaskItem from '../TaskItem/TaskItem';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import {
-  getAllTasks,
   getTasksError,
   getTasksIsLoading,
   getTasksItems,
@@ -14,7 +13,7 @@ import ReactPaginate from 'react-paginate';
 
 import Spinner from "../Spinner/Spinner";
 import ErrorIndicator from "../ErrorIndicator/ErrorIndicator";
-import { fetchTasks, updateTaskThunk } from "../../state/tasks/thunks";
+import { fetchTasks, updateTaskThunk, doneTaskThunk } from "../../state/tasks/thunks";
 import { makeStyles } from '@material-ui/core/styles';
 import Card from "@material-ui/core/Card";
 import Button from "@material-ui/core/Button";
@@ -31,7 +30,7 @@ const useStyles = makeStyles(() => ({
 
 }));
 
-const TasksList = ({tasks, onUpdate}) => {
+const TasksList = ({tasks, onUpdate, onDone, currentPage}) => {
   const classes = useStyles();
 
   return (
@@ -42,8 +41,7 @@ const TasksList = ({tasks, onUpdate}) => {
             tasks.map((task) => {
               return (
                   <Card className={ classes.card } key={ task.id }>
-                    <TaskItem task={ task } onUpdate={onUpdate} />
-
+                    <TaskItem task={ task } onUpdate={ onUpdate } onDone={onDone} currentPage={ currentPage }/>
                   </Card>
               )
             })
@@ -61,13 +59,17 @@ function TasksListContainer({tasks, totalTasksCount, loading, error, dispatch, p
 
   const handlePageClick = data => setCurrentPage(data.selected + 1);
 
-  const updateTask = data => {
-    dispatch(updateTaskThunk(data));
-  };
 
   useEffect(() => {
     dispatch(fetchTasks(currentPage));
   }, [currentPage]);
+
+  const updateTask = (data) => {
+    dispatch(updateTaskThunk(data));
+  };
+  const doneTask = (data) => {
+    dispatch(doneTaskThunk(data));
+  };
 
   if (error) {
     return <ErrorIndicator/>
@@ -80,25 +82,27 @@ function TasksListContainer({tasks, totalTasksCount, loading, error, dispatch, p
             Add a task
           </Button>
         </Link>
+
+
         <Link to={ '/login' }>
           <Button>
             Authorization
           </Button>
         </Link>
 
-          <ReactPaginate
-              previousLabel={ <button>previous</button> }
-              nextLabel={ <button>next</button> }
-              breakLabel={ '...' }
-              breakClassName={ 'break-me' }
-              pageCount={ pageCount }
-              marginPagesDisplayed={ 2 }
-              pageRangeDisplayed={ 3 }
-              onPageChange={ handlePageClick }
-              containerClassName={ 'pagination' }
-              subContainerClassName={ 'pages pagination' }
-              activeClassName={ styles.selectedPage }
-          />
+        <ReactPaginate
+            previousLabel={ <button>previous</button> }
+            nextLabel={ <button>next</button> }
+            breakLabel={ '...' }
+            breakClassName={ 'break-me' }
+            pageCount={ pageCount }
+            marginPagesDisplayed={ 2 }
+            pageRangeDisplayed={ 3 }
+            onPageChange={ handlePageClick }
+            containerClassName={ 'pagination' }
+            subContainerClassName={ 'pages pagination' }
+            activeClassName={ styles.selectedPage }
+        />
 
 
         { loading
@@ -107,7 +111,8 @@ function TasksListContainer({tasks, totalTasksCount, loading, error, dispatch, p
                 tasks={ tasks }
                 currentPage={ currentPage }
                 onPageClick={ handlePageClick }
-                onUpdate={updateTask}
+                onUpdate={ updateTask }
+                onDone = { doneTask }
             /> }
       </>
 

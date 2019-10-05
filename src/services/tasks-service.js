@@ -16,20 +16,19 @@ class TasksService {
 
     const config = {headers: {'content-type': `multipart/form-data`}};
 
-    const res = axios.post(`${ this._apiBase }${ url }`, formData, config)
-        .then(function (response) {
-          console.log(response);
-        })
+    const response = await axios.post(`${ this._apiBase }${ url }`, formData, config);
 
-        .catch(function (error) {
-          console.log(error);
-        });
+    console.log('response', response);
 
-    return await res.json()
+    if (response.data.status !== 'ok') {
+      throw new Error(JSON.stringify(response));
+    }
+
+    return response;
   }
 
-  async getAllTasks(perPage) {
-    return await this.getResource(`?developer=Natashka&page=${ perPage }`);
+  async getAllTasks(currentPage) {
+    return await this.getResource(`?developer=Natashka&page=${ currentPage }`);
   }
 
   async createTask(username, email, text) {
@@ -44,13 +43,27 @@ class TasksService {
   }
 
 
-  async updateTask(id, text) {
+  async updateTask(id, text, status) {
 
     const formData = new FormData();
     const token = localStorage.token;
 
     formData.set('text', `${ text }`);
     formData.set('token', `${ token }`);
+    formData.set('status', `${ status }`);
+    console.log(formData);
+
+    return await this.taskResource(`edit/${ id }?developer=Natashka`, formData);
+  }
+
+
+  async doneTask(id, status) {
+
+    const formData = new FormData();
+    const token = localStorage.token;
+
+    formData.set('token', `${ token }`);
+    formData.set('status', `${ status }`);
     console.log(formData);
 
     return await this.taskResource(`edit/${ id }?developer=Natashka`, formData);
@@ -64,9 +77,27 @@ class TasksService {
 
     try {
       const res = await axios.post(`${ this._apiBase }${ url }`, formData, config);
+      console.log(res.data);
 
-      localStorage.setItem("token", res.data.message.token);
-      console.log(res);
+
+
+      // if (!res.data.message.token) {
+      //   localStorage.setItem("token", "");
+      // } else {
+      //   localStorage.setItem("token", res.data.message.token);
+      // }
+
+      if (res.data.status === "ok") {
+
+        localStorage.setItem("token", res.data.message.token);
+
+      } else {
+        localStorage.setItem("token", "");
+
+      }
+
+
+      // console.log(res.data.message.token);
       console.log(localStorage);
       // const token = localStorage.token;
       //
@@ -77,7 +108,7 @@ class TasksService {
       // }
 
     } catch (error) {
-      console.log(error);
+      alert(error.message);
     }
   }
 

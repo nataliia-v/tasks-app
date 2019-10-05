@@ -1,18 +1,24 @@
 import React from 'react';
-import { BrowserRouter } from "react-router-dom";
+import { connect } from 'react-redux';
 
+import Toastr from "components/Toastr";
+import Main from "views/Main";
+import { getToastrConfig } from "../../state/toastr/selectors";
 
-import Main from "../../views/Main";
+function App({ toastrConfig }) {
 
-function App() {
+  console.log('toastrConfig', toastrConfig);
 
   return (
       <div className="App">
-        <BrowserRouter>
-          <Main />
-        </BrowserRouter>
+        <Main />
+        <Toastr {...toastrConfig} />
       </div>
   );
 }
 
-export default App;
+const mapStateToProps = state => ({
+  toastrConfig: getToastrConfig(state),
+});
+
+export default connect(mapStateToProps)(App);

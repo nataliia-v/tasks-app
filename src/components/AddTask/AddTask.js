@@ -18,43 +18,29 @@ class AddTask extends Component {
     text: "",
 
     // formErrors: "error email",
-    usernameValid: false,
-    emailValid: false,
-    textValid: false,
+    usernameIsValid: false,
+    emailIsValid: false,
+    textIsValid: false,
     formValid: false,
 
     showPostCreation: false,
-  };
 
-  useStyles = makeStyles({
-    blue: {
-      // background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-      // border: 0,
-      // borderRadius: 3,
-      // boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-      color: 'blue',
-    },
-    red : {
-      color: 'red',
-    }
-  });
+    submit: false
+  };
 
 
   onChangeUsername = e => {
-    console.log(e.target.value);
-    let event = e.target.value;
-    console.log(event.length);
-    // let result = event < 2 ? this.state.usernameValid === false :
+    const event = e.target.value;
     if (event.length < 2) {
 
       this.setState({
-        usernameValid: false
+        usernameIsValid: false
       });
-      console.log("bad name");
+
     } else {
       // console.log("true");
       this.setState({
-        usernameValid: true
+        usernameIsValid: true
       });
     }
 
@@ -64,23 +50,19 @@ class AddTask extends Component {
   };
 
   onChangeEmail = e => {
-    // let event = e.target.value;
-    // console.log(event.length);
-    // // let result = event < 2 ? this.state.usernameValid === false :
-    // if (event.length < 2) {
-    //   // console.log("false");
-    //   this.setState({
-    //     emailValid: false
-    //   });
-    // } else {
-    //   // console.log("true");
-    //   this.setState({
-    //     emailValid: true
-    //   });
-    //
-    //
-    //
-    // }
+    const event = e.target.value;
+
+    const emailValid = event.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+
+    if (!emailValid) {
+      this.setState({
+        emailIsValid: false
+      })
+    }  else {
+      this.setState({
+        emailIsValid: true
+      });
+    }
 
     this.setState({
       email: e.target.value
@@ -88,7 +70,22 @@ class AddTask extends Component {
 
   };
 
-  onChangeBody = e => {
+  onChangeText = e => {
+    const event = e.target.value;
+
+    if (event.length < 2) {
+
+      this.setState({
+        textIsValid: false
+      });
+
+    } else {
+      // console.log("true");
+      this.setState({
+        textIsValid: true
+      });
+    }
+
     this.setState({
       text: e.target.value
     });
@@ -98,14 +95,35 @@ class AddTask extends Component {
     event.preventDefault();
 
     const {dispatch} = this.props;
-    const {username, email, text, usernameValid} = this.state;
+    const {username, email, text, emailIsValid, usernameIsValid, textIsValid} = this.state;
 
-    if (!usernameValid) {
-      alert("bad username, try again (enter more than 1 symbol)");
+    if (!emailIsValid) {
+      this.setState({
+        submit: true
+      });
+
+      this.setState({
+        email: ""
+      });
+    } else if (!usernameIsValid) {
+      this.setState({
+        submit: true
+      });
+
       this.setState({
         username: ""
       });
-    }else {
+    }
+    else if (!textIsValid) {
+      this.setState({
+        submit: true
+      });
+
+      this.setState({
+        text: ""
+      });
+    }
+    else {
       dispatch(
           saveTask({
             username,
@@ -120,19 +138,48 @@ class AddTask extends Component {
         text: ""
       });
 
-      alert("The task successfully added");
-
     }
 
 
   };
 
+
   render() {
 
-    // const classes = this.useStyles();
+    const { emailIsValid, usernameIsValid, textIsValid, submit } = this.state;
 
+    /**
+     * @return {null}
+     */
+    function IsNotValidEmail()
+    {
+      if(!submit)
+        return null;
+      else
+        return <span>Email is not valid</span>;
+    }
 
-    const style = this.state.usernameValid ? 'blue' : 'red';
+    /**
+     * @return {null}
+     */
+    function IsNotValidUsername()
+    {
+      if(!submit)
+        return null;
+      else
+        return <span>Username is not valid</span>;
+    }
+
+    /**
+     * @return {null}
+     */
+    function IsNotValidText()
+    {
+      if(!submit)
+        return null;
+      else
+        return <span>Please, </span>;
+    }
 
     return (
         <div>
@@ -151,6 +198,10 @@ class AddTask extends Component {
                       variant="outlined"
                       value={ this.state.username }
                   />
+
+                  {!usernameIsValid &&
+                  <IsNotValidUsername toDisplay = {true} />
+                  }
                   <TextField
                       id="standard-textarea"
                       required
@@ -164,16 +215,26 @@ class AddTask extends Component {
                       value={ this.state.email }
 
                   />
+
+                  {!emailIsValid &&
+                    <IsNotValidEmail toDisplay = {true} />
+                  }
+
                   <TextField
                       id="standard-textarea"
                       required
                       label="Enter the text here"
                       placeholder="text"
                       multiline
-                      onChange={ this.onChangeBody }
+                      onChange={ this.onChangeText }
                       margin="normal"
                       value={ this.state.text }
                   />
+
+                  {!textIsValid &&
+                  <IsNotValidText toDisplay = {true} />
+                  }
+
                   <button type="submit" onClick={ this.handleSubmit } className="btn">add a task</button>
                 </form>
               </div>

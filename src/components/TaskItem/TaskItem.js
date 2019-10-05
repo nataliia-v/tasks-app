@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-// import { Link } from "react-router-dom";
 import { getIsSavingTask } from "../../state/tasks/selectors";
 
 import styles from './TaskItem.module.scss';
-// import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import EditIcon from '@material-ui/icons/Edit';
 import Button from '@material-ui/core/Button';
 import CardActions from '@material-ui/core/CardActions';
@@ -13,16 +12,8 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import CardActionArea from "@material-ui/core/CardActionArea";
 
-
-// const useStyles = makeStyles(theme => ({
-//   button: {
-//     margin: theme.spacing(1),
-//     fontSize: 10,
-//   },
-// }));
-
 function TaskItem(props) {
-  const {task, onUpdate} = props;
+  const {task, onUpdate, onDone, currentPage} = props;
 
   const [isEditMode, setIsEditMode] = useState(false);
   const [taskText, setTaskText] = useState(task.text);
@@ -36,85 +27,103 @@ function TaskItem(props) {
     setIsEditMode(true);
   };
 
+  const onDoneTask = () => {
+    const data = {id: task.id, status: 10, currentPage};
+    onDone(data);
+  };
+
   const onUpdateTask = () => {
     setIsEditMode(false);
-    const data = {id: task.id,  text: taskText};
+    const data = {id: task.id, text: `(changed by administrator) ${taskText}`, currentPage};
 
     onUpdate(data);
   };
-  // const onChangeBodyComment = (e) => {
-  //   const value = e.target.value;
-  //   setCommentBody(value);
-  //
-  // };
 
-  // const createComment = (event) => {
-  //   event.preventDefault();
-  //   onCreateComment(post.id, commentBody);
-  // };
-
-  // const classes = useStyles();
-
+  const status = task.status;
   const token = localStorage.token;
+  const name = "Name: ";
+  const email = "Email: ";
+  const text = "Text: ";
 
-  // if (token !== "undefined") {
-  //   console.log("token here")
-  // } else {
-  //   console.log("not token")
-  // }
   return (
       <div>
         <CardActionArea>
           <CardContent>
 
-                      <div>
-                        <Typography gutterBottom variant="h5" component="h2">
-                          { task.username }
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary" component="p">
-                          { task.email }
-                        </Typography>
+            <div>
 
-                        { isEditMode
-                            ?
-                            (
-                                <p>
-                                  <textarea className={ styles.bodyItem } value={ taskText } onChange={ onChangeText }/>
-                                </p>
-                            )
-                            : (
-                                <Typography variant="body2" color="textSecondary" component="p" value={ taskText } onChange={ onChangeText}>
-                                  {  decodeURIComponent(task.text) }
-                                </Typography>
-                            )
-                        }
+              <Typography id="name" gutterBottom variant="h5" component="h2">
+                { name }  { task.username }
+              </Typography>
+              <Typography variant="body2" color="textSecondary" component="p">
+                { email }{ task.email }
+              </Typography>
 
-                        <Typography variant="body2" color="textSecondary" component="p">
-                          { task.status }
-                        </Typography>
-                      </div>
+              { isEditMode
+                  ?
+                  (
+                      <p>
+                        <textarea className={ styles.bodyItem }  value={ taskText } onChange={ onChangeText }/>
+                      </p>
+                  )
+                  : (
+                      <Typography type={text} variant="body2" color="textSecondary" component="p" value={ taskText }
+                                  onChange={ onChangeText }>
+                        { text } { task.text }
+                      </Typography>
+                  )
+              }
 
+              { status
+                  ?
+                  (
+                      <Typography variant="body2" color="textSecondary" component="p">
+                        STATUS: done
+                        <CheckCircleOutlineIcon/>
+                      </Typography>
+
+                  )
+                  : (
+                      <Typography variant="body2" color="textSecondary" component="p">
+                        STATUS: not done
+                      </Typography>
+                  )
+              }
+
+            </div>
 
           </CardContent>
         </CardActionArea>
-        {/*{ token !== "undefined" &*/}
+        { token !== "" &&
 
         <CardActions className={ styles.flexBts }>
           <div>
-        { isEditMode && <Button onClick={ onUpdateTask } variant="outlined">
-          save task
-          </Button> }
+            { isEditMode && <Button onClick={ onUpdateTask } variant="outlined">
+              save task
+            </Button> }
 
-          <IconButton onClick={ onEditTask }  aria-label="delete">
-          <EditIcon/>
-          </IconButton>
+            <IconButton onClick={ onEditTask } aria-label="delete">
+              Edit <EditIcon/>
+            </IconButton>
+
+            { status
+                ?
+                (
+                    <div></div>
+                ) : (
+                    <IconButton onClick={ onDoneTask } aria-label="delete">
+                      выполнить <CheckCircleOutlineIcon/>
+                    </IconButton>
+                )
+            }
+
+
+            {/*<IconButton onClick={ onDoneTask } aria-label="delete">*/}
+            {/*  Done <CheckCircleOutlineIcon/>*/}
+            {/*</IconButton>*/}
           </div>
-
-          </CardActions>
-
-        {/*}*/}
-
-
+        </CardActions>
+        }
       </div>
   );
 }
