@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { saveTask } from '../../state/tasks/thunks';
-import { getIsSavingTask } from "../../state/tasks/selectors";
 import { withRouter } from "react-router";
-// import { FormErrors } from "../FormErrors/FormErrors";
-
 import TextField from '@material-ui/core/TextField';
 import { FormGroup } from "@material-ui/core";
-import { makeStyles } from '@material-ui/styles';
+
+import { saveTask } from '../../state/tasks/thunks';
+import { getIsSavingTask } from "../../state/tasks/selectors";
+
 import './addTask.css'
 
 class AddTask extends Component {
@@ -22,16 +21,14 @@ class AddTask extends Component {
     emailIsValid: false,
     textIsValid: false,
     formValid: false,
-
     showPostCreation: false,
-
     submit: false
   };
 
 
   onChangeUsername = e => {
     const event = e.target.value;
-    if (event.length < 2) {
+    if (event.length < 2 || event === "") {
 
       this.setState({
         usernameIsValid: false
@@ -54,7 +51,7 @@ class AddTask extends Component {
 
     const emailValid = event.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
 
-    if (!emailValid) {
+    if (!emailValid || event === "") {
       this.setState({
         emailIsValid: false
       })
@@ -73,7 +70,7 @@ class AddTask extends Component {
   onChangeText = e => {
     const event = e.target.value;
 
-    if (event.length < 2) {
+    if (event.length < 2 || event === "") {
 
       this.setState({
         textIsValid: false
@@ -167,7 +164,7 @@ class AddTask extends Component {
       if(!submit)
         return null;
       else
-        return <span>Username is not valid</span>;
+        return <span>Name too short</span>;
     }
 
     /**
@@ -178,7 +175,7 @@ class AddTask extends Component {
       if(!submit)
         return null;
       else
-        return <span>Please, </span>;
+        return <span>Please, enter more than 2 letters</span>;
     }
 
     return (

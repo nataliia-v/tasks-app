@@ -1,20 +1,24 @@
 /*
 * Fetch login
 * */
-export const startUserLoginFetching = () => ({
+export const startUserLogin = () => ({
   type: 'START_USER_LOGIN_FETCHING',
 });
 
-export const stopUserLoginFetching = () => ({
+export const stopUserLogin = () => ({
   type: 'STOP_USER_LOGIN_FETCHING',
 });
 
-export const fetchUserLoginSuccess = userObj => ({
-  type: 'FETCH_USER_LOGIN_SUCCESS',
+export const userLoginSuccess = userObj => ({
+  type: 'USER_LOGIN_SUCCESS',
   payload: userObj
 });
 
-export const fetchUserLoginFailed = error => ({
-  type: 'FETCH_USER_LOGIN_FAILED',
+export const userLoginFailed = error => ({
+  type: 'USER_LOGIN_FAILED',
   payload: error
+});
+
+export const userLogout = () => ({
+  type: 'USER_LOGOUT',
 });

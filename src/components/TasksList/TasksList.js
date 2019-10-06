@@ -13,7 +13,7 @@ import ReactPaginate from 'react-paginate';
 
 import Spinner from "../Spinner/Spinner";
 import ErrorIndicator from "../ErrorIndicator/ErrorIndicator";
-import { fetchTasks, updateTaskThunk, doneTaskThunk } from "../../state/tasks/thunks";
+import { fetchTasks, updateTaskThunk } from "../../state/tasks/thunks";
 import { makeStyles } from '@material-ui/core/styles';
 import Card from "@material-ui/core/Card";
 import Button from "@material-ui/core/Button";
@@ -21,30 +21,25 @@ import styles from './tasksList.module.scss'
 
 
 const useStyles = makeStyles(() => ({
-
   card: {
     maxWidth: 700,
     marginBottom: 10,
     margin: 'auto',
   },
-
 }));
 
-const TasksList = ({tasks, onUpdate, onDone, currentPage}) => {
+const TasksList = ({tasks, onUpdate, currentPage}) => {
   const classes = useStyles();
 
   return (
       <div>
         <ul>
-
           {
-            tasks.map((task) => {
-              return (
-                  <Card className={ classes.card } key={ task.id }>
-                    <TaskItem task={ task } onUpdate={ onUpdate } onDone={onDone} currentPage={ currentPage }/>
-                  </Card>
-              )
-            })
+            tasks.map((task) => (
+              <Card className={ classes.card } key={ task.id }>
+                <TaskItem task={ task } onUpdate={ onUpdate } currentPage={ currentPage }/>
+              </Card>
+            ))
           }
         </ul>
 
@@ -59,16 +54,13 @@ function TasksListContainer({tasks, totalTasksCount, loading, error, dispatch, p
 
   const handlePageClick = data => setCurrentPage(data.selected + 1);
 
-
   useEffect(() => {
     dispatch(fetchTasks(currentPage));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
   const updateTask = (data) => {
     dispatch(updateTaskThunk(data));
-  };
-  const doneTask = (data) => {
-    dispatch(doneTaskThunk(data));
   };
 
   if (error) {
@@ -80,13 +72,6 @@ function TasksListContainer({tasks, totalTasksCount, loading, error, dispatch, p
         <Link to={ '/create' }>
           <Button>
             Add a task
-          </Button>
-        </Link>
-
-
-        <Link to={ '/login' }>
-          <Button>
-            Authorization
           </Button>
         </Link>
 
@@ -112,7 +97,6 @@ function TasksListContainer({tasks, totalTasksCount, loading, error, dispatch, p
                 currentPage={ currentPage }
                 onPageClick={ handlePageClick }
                 onUpdate={ updateTask }
-                onDone = { doneTask }
             /> }
       </>
 

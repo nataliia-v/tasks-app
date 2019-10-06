@@ -1,6 +1,11 @@
 import { createSelector } from 'reselect';
 
-const getUserModuleState = state => state.autho;
+const getUserModuleState = state => state.auth;
+
+export const getUserIsLoggedIn = createSelector(
+    getUserModuleState,
+    state => state.isLoggedIn,
+)
 
 export const getUserIsLoading = createSelector(
     getUserModuleState,
@@ -10,9 +15,4 @@ export const getUserIsLoading = createSelector(
 export const getUserError = createSelector(
     getUserModuleState,
     authState => authState.error
-);
-
-export const getIsSavingUser = createSelector(
-    getUserModuleState,
-    authState => authState.isSaving
 );

@@ -1,4 +1,4 @@
-import tasksService from "../../../services/tasks-service";
+import tasksService from "../../../services/TasksService";
 
 import * as actions from '../actions';
 import { toastrActions } from "../../toastr/actions";
@@ -10,7 +10,6 @@ export const fetchTasks = (currentPage) => {
 
     try {
       const data = await tasksService.getAllTasks(currentPage);
-      console.log(data);
       dispatch(actions.fetchTasksSuccess(data));
     } catch (error) {
       dispatch(actions.fetchTasksFailed(error));
@@ -32,7 +31,6 @@ export const saveTask = ({ username, email, text }) => {
       dispatch(toastrActions.openToastr({ message: 'Task has been successfully saved.' }))
 
     } catch (error) {
-      console.log('error', error);
       dispatch(actions.saveTaskFailed(error));
       dispatch(toastrActions.openToastr({ message: 'Error saving task!!' }));
     } finally {
@@ -41,13 +39,13 @@ export const saveTask = ({ username, email, text }) => {
   };
 };
 
-export const updateTaskThunk = ({id, text, currentPage}) => {
+export const updateTaskThunk = ({ id, currentPage, ...rest }) => {
 
   return async dispatch => {
     dispatch(actions.startTaskSaving());
 
     try {
-      const data = await tasksService.updateTask(id, text);
+      const data = await tasksService.updateTask(id, rest);
       console.log('updated task', data);
       dispatch(fetchTasks(currentPage));
 
@@ -60,23 +58,3 @@ export const updateTaskThunk = ({id, text, currentPage}) => {
   }
 
 };
-
-export const doneTaskThunk = ({id, status, currentPage}) => {
-
-  return async dispatch => {
-    dispatch(actions.startTaskSaving());
-
-    try {
-      const data = await tasksService.doneTask(id, status);
-      dispatch(fetchTasks(currentPage));
-
-      dispatch(actions.updateTaskSuccess(data));
-    } catch (error) {
-      dispatch(actions.saveTaskFailed(error));
-    } finally {
-      dispatch(actions.stopTaskSaving());
-    }
-  }
-
-};
-

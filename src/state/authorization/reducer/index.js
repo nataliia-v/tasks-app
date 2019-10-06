@@ -1,7 +1,6 @@
 const initialState = {
-  currentUser: {},
+  isLoggedIn: false,
   loading: false,
-  isSaving: false,
   error: null,
 };
 
@@ -11,17 +10,23 @@ export default function reducer(state = initialState, action) {
     case 'START_USER_LOGIN_FETCHING':
       return {
         ...state,
-        isSaving: true
+        loading: true
       };
     case 'STOP_USER_LOGIN_FETCHING':
       return {
         ...state,
-        isSaving: false
+        loading: false
       };
-    case 'FETCH_USER_LOGIN_SUCCESS':
+    case 'USER_LOGIN_SUCCESS':
       return {
         ...state,
-        currentUser: [...state.currentUser, action.currentUser ]
+        isLoggedIn: true,
+      };
+    case 'USER_LOGIN_FAILED':
+    case 'USER_LOGOUT':
+      return {
+        ...state,
+        isLoggedIn: false,
       };
 
     default:

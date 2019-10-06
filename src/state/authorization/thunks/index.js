@@ -1,21 +1,40 @@
-import tasksService from "../../../services/tasks-service";
+import authService from "../../../services/AuthService";
+import history from '../../../utils/history';
 
 import * as actions from '../actions';
+import { toastrActions } from "../../toastr/actions";
+import { userLoginSuccess } from "../actions";
+import { userLoginFailed } from "../actions";
 
-
-export const userAuthe = ({username, password}) => {
+export const login = ({ username, password }) => {
 
   return async dispatch => {
-    dispatch(actions.startUserLoginFetching());
+    dispatch(actions.startUserLogin());
 
     try {
-      const data = await tasksService.userAuth(username, password);
-      dispatch(actions.fetchUserLoginSuccess(data));
+      await authService.login({ username, password });
+
+      dispatch(actions.userLoginSuccess());
+      history.push('/');
     } catch (error) {
-      dispatch(actions.fetchUserLoginFailed(error));
+      dispatch(toastrActions.openToastr({ message: 'Bad credentials' }));
+      dispatch(actions.userLoginFailed());
     } finally {
-      dispatch(actions.stopUserLoginFetching());
-      // console.log("created success")
+      dispatch(actions.stopUserLogin());
     }
   };
+};
+
+export const authenticate = () => {
+
+  return async dispatch => {
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      dispatch(userLoginSuccess());
+    } else {
+      dispatch(userLoginFailed());
+    }
+
+  }
 };

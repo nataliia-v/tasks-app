@@ -13,7 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import CardActionArea from "@material-ui/core/CardActionArea";
 
 function TaskItem(props) {
-  const {task, onUpdate, onDone, currentPage} = props;
+  const {task, onUpdate, currentPage} = props;
 
   const [isEditMode, setIsEditMode] = useState(false);
   const [taskText, setTaskText] = useState(task.text);
@@ -28,13 +28,21 @@ function TaskItem(props) {
   };
 
   const onDoneTask = () => {
-    const data = {id: task.id, status: 10, currentPage};
-    onDone(data);
+    const data = {
+      id: task.id,
+      status: 10,
+      currentPage
+    };
+    onUpdate(data);
   };
 
   const onUpdateTask = () => {
     setIsEditMode(false);
-    const data = {id: task.id, text: `(changed by administrator) ${taskText}`, currentPage};
+    const data = {
+      id: task.id,
+      text: `(changed by administrator) ${taskText}`,
+      currentPage
+    };
 
     onUpdate(data);
   };
@@ -60,8 +68,7 @@ function TaskItem(props) {
               </Typography>
 
               { isEditMode
-                  ?
-                  (
+                  ? (
                       <p>
                         <textarea className={ styles.bodyItem }  value={ taskText } onChange={ onChangeText }/>
                       </p>
@@ -75,13 +82,11 @@ function TaskItem(props) {
               }
 
               { status
-                  ?
-                  (
+                  ? (
                       <Typography variant="body2" color="textSecondary" component="p">
                         STATUS: done
                         <CheckCircleOutlineIcon/>
                       </Typography>
-
                   )
                   : (
                       <Typography variant="body2" color="textSecondary" component="p">
@@ -94,7 +99,7 @@ function TaskItem(props) {
 
           </CardContent>
         </CardActionArea>
-        { token !== "" &&
+        { token &&
 
         <CardActions className={ styles.flexBts }>
           <div>
@@ -107,20 +112,14 @@ function TaskItem(props) {
             </IconButton>
 
             { status
-                ?
-                (
+                ? (
                     <div></div>
                 ) : (
                     <IconButton onClick={ onDoneTask } aria-label="delete">
-                      выполнить <CheckCircleOutlineIcon/>
+                      Done <CheckCircleOutlineIcon/>
                     </IconButton>
                 )
             }
-
-
-            {/*<IconButton onClick={ onDoneTask } aria-label="delete">*/}
-            {/*  Done <CheckCircleOutlineIcon/>*/}
-            {/*</IconButton>*/}
           </div>
         </CardActions>
         }

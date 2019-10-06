@@ -1,21 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 
-import Toastr from "components/Toastr";
-import Main from "views/Main";
+import Toastr from "../../components/Toastr";
+import Main from "../../views/Main";
 import { getToastrConfig } from "../../state/toastr/selectors";
+import { authenticate } from "../../state/authorization/thunks";
 
-function App({ toastrConfig }) {
-
-  console.log('toastrConfig', toastrConfig);
+const App = ({ toastrConfig, dispatch }) => {
+  useEffect(() => {
+    dispatch(authenticate());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
       <div className="App">
-        <Main />
-        <Toastr {...toastrConfig} />
+        <Main/>
+        <Toastr { ...toastrConfig } />
       </div>
   );
-}
+};
 
 const mapStateToProps = state => ({
   toastrConfig: getToastrConfig(state),
